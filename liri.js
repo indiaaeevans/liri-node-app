@@ -20,9 +20,11 @@ for (var i = 3; i < process.argv.length; i++) {
 
 if (userRequest === "my-tweets"){
 	tweets();
+	logRequest();
 } else if (userRequest === "spotify-this-song"){
 	if (userQuery){
 		spotifySong(userQuery);
+		logRequest();
 	} else {
 	// If the user doesn't type a song in, output data for the song "The Sign" by Ace of Base
 		spotifySong("The Sign");
@@ -30,12 +32,14 @@ if (userRequest === "my-tweets"){
 } else if (userRequest === "movie-this") {
 	if (userQuery){
 		movie(userQuery);
+		logRequest();
 	} else {
 	// If the user doesn't type a movie in, output data for the movie 'Mr. Nobody.'
 		movie("Mr. Nobody");
 	}
 } else if (userRequest === "do-what-it-says") {
 	doSomething();
+	logRequest();
 } else {
 	console.log("That is not a valid request.");
 }
@@ -153,6 +157,14 @@ function doSomething() {
 	}
 }
 
-// * In addition to logging the data to your terminal/bash window, output the data to a .txt file called `log.txt`.
-// * Make sure you append each command you run to the `log.txt` file. 
-// * Do not overwrite your file each time you run a command.
+// In addition to logging the data to your terminal/bash window, 
+// output (append) the data to a .txt file called `log.txt`.
+function logRequest() {
+	fs.appendFile("log.txt", userRequest + "," + userQuery + "\n", function(err) {
+	  	if (err) {
+	    	console.log(err);
+	  	} else {
+	    	console.log("Request was logged successfully.\n")
+	  	}
+	});
+}
