@@ -4,6 +4,7 @@ var keys = require("./keys.js");
 var Twitter = require('twitter');
 var spotify = require('spotify');
 var request = require('request');
+// load the filesystem module from node
 var fs = require('fs');
 
 // save the user input to a variable
@@ -17,7 +18,7 @@ for (var i = 3; i < process.argv.length; i++) {
   userQuery = userQuery + " " + process.argv[i];
 
 }
-
+// evalulate what the user request was and run the corresponding functions
 if (userRequest === "my-tweets"){
 	tweets();
 	logRequest();
@@ -66,7 +67,7 @@ function tweets(){
 	  if (!error) {
 	  	// for each tweet in the response object
 	  	for(tweet in tweets){
-	  		// creates a variable to store the date of each tweet
+	  		// store the date of each tweet
 	  		var dateCreated = new Date(tweets[tweet].created_at);
 	  		// display the tweet #, date created, and text
 	  		console.log("Tweet " + (parseInt(tweet)+1) + " ");
