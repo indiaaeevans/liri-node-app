@@ -4,7 +4,7 @@ var keys = require("./keys.js");
 var Twitter = require('twitter');
 var spotify = require('spotify');
 var request = require('request');
-var filesystem = require('fs');
+var fs = require('fs');
 
 // save the user input to a variable
 let userRequest = process.argv[2],
@@ -101,12 +101,11 @@ function movie(movie) {
 	  	tomatoes: true,
 		},
 	}
-	// use Request to grab data from the [OMDB API]
+	// use Request to grab data from the OMDB API based off of movie searched
 	request(options, function (error, response, body) {
-		if(error){
-	  		console.log('error:', error); // Print the error if one occurred 
-	  		console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
-	  	} else {
+		// if request successful
+	  	if (response.statusCode === 200 && !error) {
+	  		// Parse the body of the site
 	  		var result = JSON.parse(body),
 	  			title = result.Title,
 	  			year = result.Year,
@@ -125,16 +124,33 @@ function movie(movie) {
 	  			console.log("Plot: " + plot);
 	  			console.log("Cast: " + cast);
 	  			console.log("Link: " + tomatoes);
+	  	} else {
+	  		console.log('error:', error); // Print the error if one occurred 
 	  	}
 	});
 }
 // Using the `fs` Node package, LIRI will take the text inside of random.txt 
 // and then use it to call one of LIRI's commands.
 function doSomething() {
-	console.log("test");
-	fs.readFile("random.txt", "utf8", function(error, data) {
-			
+	// first we read the file
+	fs.readFile("./random.txt", "utf8", function(error, data) {
+		// if there is an error, log to the console and stop running the function
+		if (error) {
+			console.log(error);
+			return(error);
+		}
+		// if no error we will run processFile function
+		processFile(data);
 	});
+	function processFile(content) {
+		console.log("File reads: " + content);
+		// split the data by comma so you can access *type of search* and *what to search for*
+		var fileData = content.split(',');
+		// pass this information into the function if the text instructs us to search through spotify
+		if(fileData[0] === "spotify-this-song"){
+    		spotifySong(fileData[1]);
+		}
+	}
 }
 
 // * In addition to logging the data to your terminal/bash window, output the data to a .txt file called `log.txt`.
